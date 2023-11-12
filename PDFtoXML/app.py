@@ -90,7 +90,7 @@ st.markdown("# Converter PDF do SIAPE para Arquivo XML do SIAFI")
 st.markdown(
     '''
     Esta aplicação processa um arquivo PDF extraído do SIAPE, procura uma lista de favorecidos para desconto externo \
-visando repassa para entidades consignatárias e exporta os dados no formato XML com \
+visando repasse financeiro para entidades consignatárias e exporta os dados no formato XML com \
 layout reconhecido pelo SIAFI para *Carga de Dados* em processamento Batch.  
 Mais informações: [Processamento Bacth do Siafi](https://www.gov.br/\
 tesouronacional/pt-br/siafi/siafi-web/informacoes-tecnicas/arquivos-batch) 
@@ -103,9 +103,9 @@ with st.sidebar:
     with col1_sidedar:
         st.image(Image.open("public/images/GitHub-Mark-64px.png"),width=48)
     with col2_sidedar:
-        st.write('Código do Projeto disponível no GitHub: [Repósitório](https://github.com/rafarbop/PDF-to-XML-SIAFI)')
-    st.caption('Arquivo exemplo de Folha de Pagamentos - SISAE')
-    st.caption('[Modelo_Folha_Pagamentos_Auxilios.pdf](https://github.com/rafarbop/PDF-to-XML-SIAFI/blob/11348cb5d772f4047ed143f22f77035d113e4e37/public/examples/Modelo_Folha_Pagamento_auxilios_SISAE.pdf)')
+        st.write('Código do Projeto disponível no GitHub: [Repósitório](https://github.com/camaraajcv/descontoExternoCivl.git)')
+    st.caption('Arquivo exemplo de Repasse para as consignatárias - SIAPE')
+    st.caption('[Modelo_SIAPE.pdf](https://github.com/camaraajcv/descontoExternoCivl/blob/main/public/examples/modelo_consignatarias.pdf)')
     st.write('---')
     st.write('Parametros de processamento: ')
     alterarAgenciasBancosDigitais = st.checkbox('Alterar as Agências de Bancos Digitais para 9999', help='(Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)')
