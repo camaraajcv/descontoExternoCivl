@@ -86,7 +86,7 @@ def processDatatoXML(dadosDH: dict, dadosAuxilios: dict,DadostxtObserPreDoc: str
 # Ajust layout and visual of streamlit
 
 # Title and Description of Application
-st.markdown("# Converter PDF para Arquivo XML do SIAFI")
+st.markdown("# Converter PDF do SIAPE para Arquivo XML do SIAFI")
 st.markdown(
     '''
     Esta aplicação processa um arquivo PDF extraído do Sistema de \
