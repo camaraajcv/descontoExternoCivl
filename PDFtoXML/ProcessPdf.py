@@ -14,7 +14,7 @@ import pandas as pd
 import tabula
 import streamlit as st
 
-class SeuProcessadorDePDF:
+class ProcessPdf:
     def toDataframe(self, text):
         '''Convert table in PDF text into DataFrame'''
         try:
