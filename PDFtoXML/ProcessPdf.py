@@ -17,9 +17,8 @@ import streamlit as st
 
 class ProcessPdf:
     def toDataframe(self, text):
-        '''Convert table in PDF text into DataFrame'''
-        try:
-            
+       
+                 
             # Use regex para encontrar os CNPJs no texto
             cnpj_pattern = r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}'
             cnpjs = re.findall(cnpj_pattern, text)
@@ -50,9 +49,7 @@ class ProcessPdf:
             self.table_dataframe = df_final                    
             self.table_dataframe.index += 1
             self.isValidPdf = True
-        except Exception as e:
-            # Lidar com exceção (substitua Exception pelo tipo de exceção real se possível)
-            print(f"Erro ao processar o DataFrame: {e}")
+        
 
     def lenDataframe(self):
         return len(self.table_dataframe.index)
