@@ -1,6 +1,6 @@
 from urllib.parse import quote
 from CleanData import zfillConta,lstripConta
-#from ProcessPdf import ProcessPdf
+from ProcessPdf import ProcessPdf
 from ConverttoXML import convertXML,receberXML
 from PIL import Image
 import streamlit as st
