@@ -37,8 +37,7 @@ class ProcessPdf:
             # Remova os pontos dos milhares e substitua a vírgula pelo ponto
             df['Valor Líquido'] = df['Texto_Após_CNPJ'].str.extract(r'(\d{3}\.\d{3},\d{2})')[0]
             df['Valor Líquido'] = df['Valor Líquido'].str.replace('.', '').str.replace(',', '.')
-            # Converta a coluna para tipo float
-            df['Valor Líquido'] = df['Valor Líquido'].astype(float)
+         
 
             # Use a função str.replace() para remover "." (ponto), "/" (barra) e "-" (hífen) da coluna 'CNPJ'
             df['CNPJ'] = df['CNPJ'].str.replace('.', '').str.replace('/', '').str.replace('-', '')
