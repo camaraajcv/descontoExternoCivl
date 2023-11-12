@@ -120,7 +120,7 @@ if fileUploaded is not None:
             f"A tabela com a lista de pagamentos encontrou \
 {processPdf.lenDataframe()} aluno(s)."
         )
-        processPdf.cleanDataframe()
+        #processPdf.cleanDataframe()
 
     if st.checkbox('Alterar as Agências de Bancos Digitais para 9999 (Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)'):
         df_data_students['AG. No'].loc[df_data_students['BCO No'] == '260'] = '9999'
