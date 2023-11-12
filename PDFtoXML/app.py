@@ -5,13 +5,20 @@ from ConverttoXML import convertXML,receberXML
 from PIL import Image
 import streamlit as st
 from datetime import date
-
+import base64
+import io
 
 st.set_page_config(
     page_title="PDF to XML-SIAFI",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+def custom_file_uploader(label, type=None, key=None):
+    """Função personalizada para simular file_uploader com mensagens em português."""
+    uploaded_file = st.file_uploader(label, type=type, key=key)
+
+    if uploaded_file is not None:
+        st.success("Arquivo carregado com sucesso!")
 
 DadostxtObserPreDoc = ''
 
@@ -108,10 +115,10 @@ with st.sidebar:
     st.caption('[Modelo_SIAPE.pdf](https://github.com/camaraajcv/descontoExternoCivl/blob/main/public/examples/modelo_consignatarias.pdf)')
     st.write('---')
     st.write('Parametros de processamento: ')
-    alterarAgenciasBancosDigitais = st.checkbox('Alterar as Agências de Bancos Digitais para 9999', help='(Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)')
-    alterarPoupancasCaixa = st.checkbox('Alterar Poupança da CAIXA(Operação 013)', help='Incluir 13 no começo da conta')
-    alterarObservacoesPredocOB = st.checkbox('Alterar "Observações" do Pre-doc OB', help='Caso não selecionado, será colocado texto padrão',value=False)
-    alterarNumDocOrigemDadosBasicos = st.checkbox('Alterar "numDocOrigem" do Dados Básicos do DH', help='Caso não selecionado, será colocado texto padrão',value=False)
+    #alterarAgenciasBancosDigitais = st.checkbox('Alterar as Agências de Bancos Digitais para 9999', help='(Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)')
+    #alterarPoupancasCaixa = st.checkbox('Alterar Poupança da CAIXA(Operação 013)', help='Incluir 13 no começo da conta')
+    #alterarObservacoesPredocOB = st.checkbox('Alterar "Observações" do Pre-doc OB', help='Caso não selecionado, será colocado texto padrão',value=False)
+    #alterarNumDocOrigemDadosBasicos = st.checkbox('Alterar "numDocOrigem" do Dados Básicos do DH', help='Caso não selecionado, será colocado texto padrão',value=False)
 
 
 fileUploaded = st.sidebar.file_uploader(
