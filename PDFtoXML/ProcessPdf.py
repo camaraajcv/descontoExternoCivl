@@ -19,9 +19,11 @@ class ProcessPdf:
     def toDataframe(self, text):
         '''Convert table in PDF text into DataFrame'''
          
-        with open("teste3.pdf", "rb") as pdf_file:
+        
+        try:
+            with open("teste3.pdf", "rb") as pdf_file:
             # Crie um objeto PdfReader
-            pdf_reader = PdfReader(pdf_file)
+                pdf_reader = PdfReader(pdf_file)
 
             # Verifique se o arquivo PDF possui senhas
             if pdf_reader.is_encrypted:
@@ -31,7 +33,6 @@ class ProcessPdf:
                 text = ""
                 for page in pdf_reader.pages:
                     text += page.extract_text()
-        try:
             # Use regex para encontrar os CNPJs no texto
             cnpj_pattern = r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}'
             cnpjs = re.findall(cnpj_pattern, text)
