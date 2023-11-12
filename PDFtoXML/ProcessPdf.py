@@ -46,12 +46,7 @@ class ProcessPdf:
             df_final=df.drop('Texto_Após_CNPJ', axis=1)
             self.table_dataframe=df_final
 
-        except Exception as e:
-            st.error(f"Ocorreu um erro no processamento do arquivo: {str(e)}")
-            self.isValidPdf = False
-
-        finally:
-            return self.table_dataframe
+    
     
     def lenDataframe(self):
         return len(self.table_dataframe.index)
