@@ -46,6 +46,8 @@ class ProcessPdf:
 
             df_final = df.drop('Texto_Após_CNPJ', axis=1)
             self.table_dataframe = df_final
+            self.table_dataframe.index += 1
+            self.isValidPdf = True
         except Exception as e:
             # Lidar com exceção (substitua Exception pelo tipo de exceção real se possível)
             print(f"Erro ao processar o DataFrame: {e}")
