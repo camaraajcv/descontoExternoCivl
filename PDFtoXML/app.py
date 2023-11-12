@@ -4,7 +4,6 @@ from ProcessPdf import ProcessPdf
 from ConverttoXML import convertXML,receberXML
 from PIL import Image
 import streamlit as st
-from datetime import date
 
 
 st.set_page_config(
@@ -12,9 +11,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
-if uploaded_file is not None:
-        st.success("Arquivo carregado com sucesso!")
 
 DadostxtObserPreDoc = ''
 
