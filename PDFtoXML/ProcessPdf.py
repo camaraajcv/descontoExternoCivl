@@ -22,7 +22,7 @@ class ProcessPdf:
         self.isValidPdf = False
         self.colunms_to_use =  [
             "NOME",
-            "C.P.F.",
+            "CNPJ",
             "BCO No",
             "AG. No",
             "OP. No",
