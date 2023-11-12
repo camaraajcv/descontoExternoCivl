@@ -89,9 +89,8 @@ def processDatatoXML(dadosDH: dict, dadosAuxilios: dict,DadostxtObserPreDoc: str
 st.markdown("# Converter PDF do SIAPE para Arquivo XML do SIAFI")
 st.markdown(
     '''
-    Esta aplicação processa um arquivo PDF extraído do Sistema de \
-Auxilios Estudantis - SISAE do IFCE, procura uma lista de alunos para \
-pagamentos de Auxilios estudantis e exporta os dados no formato XML com \
+    Esta aplicação processa um arquivo PDF extraído do SIAPE, procura uma lista de favorecidos para desconto externo \
+visando repassa para entidades consignatárias e exporta os dados no formato XML com \
 layout reconhecido pelo SIAFI para *Carga de Dados* em processamento Batch.  
 Mais informações: [Processamento Bacth do Siafi](https://www.gov.br/\
 tesouronacional/pt-br/siafi/siafi-web/informacoes-tecnicas/arquivos-batch) 
