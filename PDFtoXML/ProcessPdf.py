@@ -17,8 +17,8 @@ import streamlit as st
 
 class ProcessPdf:
     def toDataframe(self, text):
-       
-                 
+        '''Convert table in PDF text into DataFrame'''
+        try:
             # Use regex para encontrar os CNPJs no texto
             cnpj_pattern = r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}'
             cnpjs = re.findall(cnpj_pattern, text)
@@ -41,15 +41,15 @@ class ProcessPdf:
 
             # Remova os pontos dos milhares e substitua a vírgula pelo ponto
             df['Valor Líquido'] = df['Valor Líquido'].str.replace('.', '').str.replace(',', '.')
+        
             # Use a função str.replace() para remover "." (ponto), "/" (barra) e "-" (hífen) da coluna 'CNPJ'
             df['CNPJ'] = df['CNPJ'].str.replace('.', '').str.replace('/', '').str.replace('-', '')
 
             df_final = df.drop('Texto_Após_CNPJ', axis=1)
-            st.success("O arquivo foi processado com sucesso!")
-            self.table_dataframe = df_final                    
-            self.table_dataframe.index += 1
-            self.isValidPdf = True
-        
+            self.table_dataframe = df_final
+        except Exception as e:
+            # Lidar com exceção (substitua Exception pelo tipo de exceção real se possível)
+            print(f"Erro ao processar o DataFrame: {e}")
 
     def lenDataframe(self):
         return len(self.table_dataframe.index)
