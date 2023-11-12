@@ -29,24 +29,24 @@ class ProcessPdf:
             data = {'CNPJ': cnpjs, 'Texto_Após_CNPJ': text_parts[1:]}
             df = pd.DataFrame(data)
 
-            # Extraia os dados usando regex
-            df['Empresa'] = df['Texto_Após_CNPJ'].str.extract(r'(.*?)\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')[0]
-            df['Qtd.Serv'] = df['Texto_Após_CNPJ'].str.extract(r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}(.*?)\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')[0]
-            # Continue com os outros campos...
+            df['Empresa'] = df['Texto_Após_CNPJ'].str[:33]
+            df['Qtd.Serv'] = df['Texto_Após_CNPJ'].str[38:43]
+            df['Valor Bruto'] = df['Texto_Após_CNPJ'].str[46:60]
+            df['Rubrica'] = df['Texto_Após_CNPJ'].str[61:68]
+            df['BCO'] = df['Texto_Após_CNPJ'].str[219:222]
+            df['AG'] = df['Texto_Após_CNPJ'].str[223:229]
+            df['Conta'] = df['Texto_Após_CNPJ'].str[230:244]
+            df['Valor Líquido'] = df['Texto_Após_CNPJ'].str[279:297]
 
             # Remova os pontos dos milhares e substitua a vírgula pelo ponto
-            df['Valor Líquido'] = df['Texto_Após_CNPJ'].str.extract(r'(\d{3}\.\d{3},\d{2})')[0]
             df['Valor Líquido'] = df['Valor Líquido'].str.replace('.', '').str.replace(',', '.')
-         
-
+            # Converta a coluna para tipo float
+            df['Valor Líquido'] = df['Valor Líquido'].astype(float)
             # Use a função str.replace() para remover "." (ponto), "/" (barra) e "-" (hífen) da coluna 'CNPJ'
             df['CNPJ'] = df['CNPJ'].str.replace('.', '').str.replace('/', '').str.replace('-', '')
 
-            # Remova a coluna temporária 'Texto_Após_CNPJ'
-            df = df.drop('Texto_Após_CNPJ', axis=1)
-
-            self.table_dataframe = df
-            self.isValidPdf = True
+            df_final=df.drop('Texto_Após_CNPJ', axis=1)
+            self.table_dataframe=df_final
 
         except Exception as e:
             st.error(f"Ocorreu um erro no processamento do arquivo: {str(e)}")
