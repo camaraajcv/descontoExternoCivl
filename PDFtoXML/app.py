@@ -5,17 +5,14 @@ from ConverttoXML import convertXML,receberXML
 from PIL import Image
 import streamlit as st
 from datetime import date
-import base64
-import io
+
 
 st.set_page_config(
     page_title="PDF to XML-SIAFI",
     layout="wide",
     initial_sidebar_state="expanded",
 )
-def custom_file_uploader(label, type=None, key=None):
-    """Função personalizada para simular file_uploader com mensagens em português."""
-    uploaded_file = st.file_uploader(label, type=type, key=key,help="Apenas arquivos PDF são permitidos. Limite de 200MB por arquivo.")
+
 
     if uploaded_file is not None:
         st.success("Arquivo carregado com sucesso!")
@@ -133,7 +130,7 @@ if fileUploaded is not None:
     if processPdf.isValidPdf:
         st.sidebar.info(
             f"A tabela com a lista de pagamentos encontrou \
-{processPdf.lenDataframe()} aluno(s)."
+{processPdf.lenDataframe()} Empresa(s)."
         )
         processPdf.cleanDataframe()
 
