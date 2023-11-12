@@ -50,5 +50,8 @@ class ProcessPdf:
             # Lidar com exceção (substitua Exception pelo tipo de exceção real se possível)
             print(f"Erro ao processar o DataFrame: {e}")
 
+    def lenDataframe(self):
+        return len(self.table_dataframe.index)
+
     
     
