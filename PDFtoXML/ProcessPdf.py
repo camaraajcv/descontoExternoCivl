@@ -9,54 +9,50 @@ from CleanData import (
     fillZerosAG,
     removeAG_DV,
 )
-import pandas
+import re
+import pandas as pd
 import tabula
 import streamlit as st
 
-
-class ProcessPdf:
-    '''Process a File PDF Uploaded for the user in a dataframe'''
-    def __init__(self) -> None:
-        self.table_raw_list = []
-        self.table_dataframe = pandas.DataFrame()
-        self.isValidPdf = False
-        self.colunms_to_use =  [
-            "NOME",
-            "CNPJ",
-            "BCO No",
-            "AG. No",
-            "OP. No",
-            "C/C",
-            "VALOR"
-        ]
-    
-    def toDataframe(self, file):
-        '''Convert table in PDF into Dataframe'''
+class SeuProcessadorDePDF:
+    def toDataframe(self, text):
+        '''Convert table in PDF text into DataFrame'''
         try:
-            with st.spinner('Lendo e Processando dados do PDF...'):
-                self.table_raw_list = tabula.read_pdf(
-                    file,
-                    pages="all"
-                )[2:]
-            st.success("O arquivo foi processado com sucesso!")
-            if file is not None and len(self.table_raw_list) > 0:
-                if len(self.table_raw_list) > 1:
-                    self.table_dataframe = self.table_raw_list[0]
-                    for k in range(1, len(self.table_raw_list)):
-                        self.table_dataframe = pandas.concat(
-                            [self.table_dataframe, self.table_raw_list[k]],
-                            ignore_index=True)
-                elif len(self.table_raw_list) == 1:
-                    self.table_dataframe = self.table_raw_list[0]
-                self.table_dataframe = pandas.DataFrame(
-                    self.table_dataframe,
-                    columns=self.colunms_to_use
-                )
-                self.table_dataframe.index += 1
-                self.isValidPdf = True
-        except:
-            st.error("Ocorreu um erro no processamento do arquivo.\n\
-Verifique se o arquivo é um pdf extraído do SISAE.")
+            # Use regex para encontrar os CNPJs no texto
+            cnpj_pattern = r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}'
+            cnpjs = re.findall(cnpj_pattern, text)
+
+            # Use a função re.split para dividir o texto com base nos CNPJs
+            text_parts = re.split(cnpj_pattern, text)
+
+            # Crie um DataFrame com os CNPJs e o texto após os CNPJs
+            data = {'CNPJ': cnpjs, 'Texto_Após_CNPJ': text_parts[1:]}
+            df = pd.DataFrame(data)
+
+            # Extraia os dados usando regex
+            df['Empresa'] = df['Texto_Após_CNPJ'].str.extract(r'(.*?)\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')[0]
+            df['Qtd.Serv'] = df['Texto_Após_CNPJ'].str.extract(r'\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}(.*?)\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}')[0]
+            # Continue com os outros campos...
+
+            # Remova os pontos dos milhares e substitua a vírgula pelo ponto
+            df['Valor Líquido'] = df['Texto_Após_CNPJ'].str.extract(r'(\d{3}\.\d{3},\d{2})')[0]
+            df['Valor Líquido'] = df['Valor Líquido'].str.replace('.', '').str.replace(',', '.')
+            # Converta a coluna para tipo float
+            df['Valor Líquido'] = df['Valor Líquido'].astype(float)
+
+            # Use a função str.replace() para remover "." (ponto), "/" (barra) e "-" (hífen) da coluna 'CNPJ'
+            df['CNPJ'] = df['CNPJ'].str.replace('.', '').str.replace('/', '').str.replace('-', '')
+
+            # Remova a coluna temporária 'Texto_Após_CNPJ'
+            df = df.drop('Texto_Após_CNPJ', axis=1)
+
+            self.table_dataframe = df
+            self.isValidPdf = True
+
+        except Exception as e:
+            st.error(f"Ocorreu um erro no processamento do arquivo: {str(e)}")
+            self.isValidPdf = False
+
         finally:
             return self.table_dataframe
     
