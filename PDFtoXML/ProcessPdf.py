@@ -12,7 +12,7 @@ from CleanData import (
 import re
 import pandas as pd
 import streamlit as st
-from PyPDF2 import PdfReader
+#from PyPDF2 import PdfReader
 
 class ProcessPdf:
     def toDataframe(self, text):
