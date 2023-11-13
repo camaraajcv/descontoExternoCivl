@@ -4,6 +4,7 @@ from ProcessPdf import ProcessPdf
 from ConverttoXML import convertXML,receberXML
 from PIL import Image
 import streamlit as st
+from datetime import date
 
 
 st.set_page_config(
@@ -104,7 +105,15 @@ with st.sidebar:
         st.image(Image.open("public/images/GitHub-Mark-64px.png"),width=48)
     with col2_sidedar:
         st.write('Código do Projeto disponível no GitHub: [Repósitório](https://github.com/rafarbop/PDF-to-XML-SIAFI)')
+    st.caption('Arquivo exemplo de Folha de Pagamentos - SISAE')
+    st.caption('[Modelo_Folha_Pagamentos_Auxilios.pdf](https://github.com/rafarbop/PDF-to-XML-SIAFI/blob/11348cb5d772f4047ed143f22f77035d113e4e37/public/examples/Modelo_Folha_Pagamento_auxilios_SISAE.pdf)')
     st.write('---')
+    st.write('Parametros de processamento: ')
+    alterarAgenciasBancosDigitais = st.checkbox('Alterar as Agências de Bancos Digitais para 9999', help='(Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)')
+    alterarPoupancasCaixa = st.checkbox('Alterar Poupança da CAIXA(Operação 013)', help='Incluir 13 no começo da conta')
+    alterarObservacoesPredocOB = st.checkbox('Alterar "Observações" do Pre-doc OB', help='Caso não selecionado, será colocado texto padrão',value=False)
+    alterarNumDocOrigemDadosBasicos = st.checkbox('Alterar "numDocOrigem" do Dados Básicos do DH', help='Caso não selecionado, será colocado texto padrão',value=False)
+
 
 fileUploaded = st.sidebar.file_uploader(
     "Faça upload do arquivo PDF:",
@@ -120,17 +129,17 @@ if fileUploaded is not None:
             f"A tabela com a lista de pagamentos encontrou \
 {processPdf.lenDataframe()} aluno(s)."
         )
-        #processPdf.cleanDataframe()
+        processPdf.cleanDataframe()
 
-    if st.checkbox('Alterar as Agências de Bancos Digitais para 9999 (Nubank - Código 260, PicPay - Código 380 e C6 Bank - Código 336)'):
-        df_data_students['AG. No'].loc[df_data_students['BCO No'] == '260'] = '9999'
-        df_data_students['AG. No'].loc[df_data_students['BCO No'] == '380'] = '9999'
-        df_data_students['AG. No'].loc[df_data_students['BCO No'] == '336'] = '9999'
+        if alterarAgenciasBancosDigitais:
+            df_data_students['AG. No'].loc[df_data_students['BCO No'] == '260'] = '9999'
+            df_data_students['AG. No'].loc[df_data_students['BCO No'] == '380'] = '9999'
+            df_data_students['AG. No'].loc[df_data_students['BCO No'] == '336'] = '9999'
 
-    if st.checkbox('Alterar Contas Poupança da CAIXA(Operação 013) - Incluir 13 no começo da conta'):
-        df_data_students['C/C'] = df_data_students['C/C'].apply(zfillConta)
-        df_data_students.loc[(df_data_students['OP. No'] == '013') & (df_data_students['BCO No'] == '104'),'C/C'] = '13'+df_data_students['C/C']
-        df_data_students['C/C'] = df_data_students['C/C'].apply(lstripConta)
+        if alterarPoupancasCaixa:
+            df_data_students['C/C'] = df_data_students['C/C'].apply(zfillConta)
+            df_data_students.loc[(df_data_students['OP. No'] == '013') & (df_data_students['BCO No'] == '104'),'C/C'] = '13'+df_data_students['C/C']
+            df_data_students['C/C'] = df_data_students['C/C'].apply(lstripConta)
 
 
     with st.expander("Visualise os dados extraídos do PDF processado.", expanded=True):
@@ -161,7 +170,7 @@ if fileUploaded is not None:
             with col4:
                 dadosGeraisDH['anoReferencia'] = st.number_input(
                     "Ano Corrente na data de Apropriação do Documento Hábil",
-                    value=2022,
+                    value=date.today().year,
                     step=1,
                     min_value=2022,
                     max_value=2030
@@ -186,12 +195,12 @@ if fileUploaded is not None:
             col1,col2 = st.columns(2)
             col3,col4 = st.columns(2)
             col5,col6 = st.columns(2)
-            col7 = st.columns(1)
+            col7,col8 = st.columns(2)
             with col1:
                 dadosGeraisAuxilios['tipoAuxilio'] = st.text_input(
                     "Tipo de Auxílio - Informação será utilizada em 'Observações'",
                     help="Mês/Ano, Processo e Nome do Aluno serão também incluídos automaticamente no Campo Observações.",
-                    value="Auxílio Emergêncial"
+                    value="Auxílio Estudantil"
                 )
             with col2:
                 dadosGeraisAuxilios['mesCompetenciaAuxilio'] = st.text_input(
@@ -216,8 +225,23 @@ if fileUploaded is not None:
                 dadosGeraisAuxilios["numeroEmpenho"] = st.text_input(
                     "Informe o Empenho a ser utilizado na liquidação e pagamentos",
                     max_chars=12,
-                    placeholder='2022NE000001'
+                    placeholder='2024NE000001'
                 )
+            with col7:
+                if alterarObservacoesPredocOB:
+                    DadostxtObserPreDoc = st.text_input(
+                        label="Informe o texto de 'Observações' do Pre-doc OB"
+                    )
+                else:
+                    DadostxtObserPreDoc = dadosGeraisAuxilios['tipoAuxilio']
+            with col8:
+                if alterarNumDocOrigemDadosBasicos:
+                    numDocOrigemEspecifico = st.text_input(
+                        label="Informe o 'numDocOrigem' - Campo de Documento de Origem em Dados Básicos do DH",
+                        max_chars=17
+                    )
+                else:
+                    numDocOrigemEspecifico=f'{dadosGeraisAuxilios["mesCompetenciaAuxilio"]}/{dadosGeraisAuxilios["anoCompetenciaAuxilio"]}'[:18]
             submit_dadosGeraisAuxilios = st.form_submit_button("Confirmar Dados Gerais dos Auxilios")
 
 
@@ -232,23 +256,6 @@ if fileUploaded is not None:
         st.warning('Informe o Empenho a ser utilizado')
     else:
         isDatasInputsOK = True
-    
-    if st.checkbox('Incluir texto específico no campo "Obsevarções" do Pre-doc OB',value=False):
-        DadostxtObserPreDoc = st.text_input(
-            label="Informe o texto de 'Observações' do Pre-doc OB",
-            help="Caso deseje que esse campo seja igual ao campo 'Observações' da aba Dados Gerais, DESMARQUE o checkbox acima e continue"
-        )
-    else:
-        DadostxtObserPreDoc = dadosGeraisAuxilios['tipoAuxilio']
-    
-    if st.checkbox('Incluir texto específico no campo "numDocOrigem" do Dados Básicos do DH',value=False):
-        numDocOrigemEspecifico = st.text_input(
-            label="Informe o 'numDocOrigem' - Campo de Documento de Origem em Dados Básicos do DH",
-            help="Desmarque o checkbox acima e continue para utilizar o valor padrão (Mês/Ano)",
-            max_chars=17
-        )
-    else:
-        numDocOrigemEspecifico=f'{dadosGeraisAuxilios["mesCompetenciaAuxilio"]}/{dadosGeraisAuxilios["anoCompetenciaAuxilio"]}'[:18]
 
     if st.button('Processar Dados e Gerar Arquivo XML'):
         if isDatasInputsOK:
@@ -269,3 +276,4 @@ if fileUploaded is not None:
         else:
             st.error('Necessário informar os dados completos para gerar o Arquivo XML!')
             st.warning('Verifique se confirmou os dados apertando nos botões de confirmar!')
+    
