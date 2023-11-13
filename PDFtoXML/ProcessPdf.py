@@ -12,6 +12,7 @@ from CleanData import (
 import re
 import pandas as pd
 import streamlit as st
+pip install PyPDF2
 from PyPDF2 import PdfReader
 
 class ProcessPdf:
